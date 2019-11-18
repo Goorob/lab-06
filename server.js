@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 
 app.get('/location', locationinfo);
+
 app.get('/weather', weatherinfo);
 
 function locationinfo(request, response) {
@@ -35,6 +36,7 @@ function Location(city, data) {
 }
 
 
+
 function weatherinfo(request, response) {
     let weatherData = getweatherinfo(request.query.data)
     response.status(200).json(weatherData);
@@ -54,6 +56,7 @@ function Weather(day) {
     this.forecast = day.summary;
     this.time = new Date(day.time * 1021.1).toDateString();
 }
+
 
 
 
