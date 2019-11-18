@@ -13,23 +13,26 @@ const app = express();
 
 app.use(cors());
 
-app.get('/location', (request, response) => {
-    const locationData = require('./data/geo.json');
-    const location = new Location(locationData);
-    response.status(200).json(location);
-});
+app.get('/location', locationinfo);
 
-function Location(data) {
-    this.search_query = 'lynnwood';
+function locationinfo(request, response) {
+    let locationData = getlocationinfo(request.query.data)
+    response.status(200).json(locationData);
+}
+
+function getlocationinfo(city) {
+    let data = require('./data/geo.json');
+    return new Location(city, data);
+
+}
+
+function Location(city, data) {
+    this.search_query = city;
     this.formatted_query = data.results[0].formatted_address;
     this.latitude = data.results[0].geometry.location.lat;
     this.longitude = data.results[0].geometry.location.lng;
 }
 
-// app.use( (error, request, response) => {
-//   response.status(500).send(error);
-
-// });
 
 
 app.listen(PORT, () => console.log(`App Listening on ${PORT}`));
