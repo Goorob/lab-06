@@ -13,37 +13,48 @@ const app = express();
 
 app.use(cors());
 
-app.get('/location', (request, response) => {
-    const locationData = require('./data/geo.json');
-    const location = new Location(locationData);
-    response.status(200).json(location);
-});
+app.get('/location', locationinfo);
+app.get('/weather', weatherinfo);
 
-function Location(data) {
-    this.search_query = 'lynnwood';
+function locationinfo(request, response) {
+    let locationData = getlocationinfo(request.query.data)
+    response.status(200).json(locationData);
+}
+
+function getlocationinfo(city) {
+    let data = require('./data/geo.json');
+    return new Location(city, data);
+
+}
+
+function Location(city, data) {
+    this.search_query = city;
     this.formatted_query = data.results[0].formatted_address;
     this.latitude = data.results[0].geometry.location.lat;
     this.longitude = data.results[0].geometry.location.lng;
 }
 
 
-app.get('/', (request, response) => {
+function weatherinfo(request, response) {
+    let weatherData = getweatherinfo(request.query.data)
+    response.status(200).json(weatherData);
+}
 
-    response.status(200).send('You did a great job');
-});
+function getweatherinfo(city) {
+    let data = require('./data/darksky.json');
+    return data.daily.data.map((day) => {
+        return new Weather(day);
 
-app.get('/error', (request, response) => {
-    throw new Error('Whoops');
-});
+    });
+}
 
-app.use('*', (request, response) => {
-    response.status(404).send('Not Found');
-});
 
-app.use((error, request, response) => {
-    response.status(500).send(error);
+function Weather(day) {
 
-});
+    this.forecast = day.summary;
+    this.time = new Date(day.time * 1021.1).toDateString();
+}
+
 
 
 app.listen(PORT, () => console.log(`App Listening on ${PORT}`));
