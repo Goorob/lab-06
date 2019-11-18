@@ -2,34 +2,48 @@
 
 require('dotenv').config();
 
-const express = require ('express');
+const express = require('express');
 
 
-const cors = require ('cors');
+const cors = require('cors');
 
 const PORT = process.env.PORT;
 
 const app = express();
 
-app.use( cors() );
+app.use(cors());
 
-// app.get('/', (request, response) => {
-  
-//   response.status(200).send('You did a great job');
-// });
+app.get('/location', (request, response) => {
+    const locationData = require('./data/geo.json');
+    const location = new Location(locationData);
+    response.status(200).json(location);
+});
 
-// app.get('/error', (request,response) => {
-//   throw new Error('Whoops');
-// });
+function Location(data) {
+    this.search_query = 'lynnwood';
+    this.formatted_query = data.results[0].formatted_address;
+    this.latitude = data.results[0].geometry.location.lat;
+    this.longitude = data.results[0].geometry.location.lng;
+}
 
-// app.use('*', (request, response) =>{
-//   response.status(404).send('Not Found');
-// });
 
-app.use( (error, request, response) => {
-  response.status(500).send(error);
-  
+app.get('/', (request, response) => {
+
+    response.status(200).send('You did a great job');
+});
+
+app.get('/error', (request, response) => {
+    throw new Error('Whoops');
+});
+
+app.use('*', (request, response) => {
+    response.status(404).send('Not Found');
+});
+
+app.use((error, request, response) => {
+    response.status(500).send(error);
+
 });
 
 
-app.listen(PORT , () => console.log(`App Listening on ${PORT}`));
+app.listen(PORT, () => console.log(`App Listening on ${PORT}`));
