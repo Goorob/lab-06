@@ -17,6 +17,8 @@ app.get('/location', locationinfo);
 
 app.get('/weather', weatherinfo);
 
+
+// location 
 function locationinfo(request, response) {
     let locationData = getlocationinfo(request.query.data)
     response.status(200).json(locationData);
@@ -36,7 +38,7 @@ function Location(city, data) {
 }
 
 
-
+// weather 
 function weatherinfo(request, response) {
     let weatherData = getweatherinfo(request.query.data)
     response.status(200).json(weatherData);
@@ -58,6 +60,18 @@ function Weather(day) {
 }
 
 
+// error 
+app.get('/foo', (request,response) => {
+  throw new Error('Error');
+});
+
+app.use('*', (request, response) =>{
+  response.status(404).send('Not Found');
+});
+
+app.use( (error, request, response) => {
+  response.status(500).send('Sorry , something goes wrong ');
+});
 
 
 app.listen(PORT, () => console.log(`App Listening on ${PORT}`));
