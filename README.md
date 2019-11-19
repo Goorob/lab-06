@@ -1,10 +1,12 @@
 # lab-06
-Number and name of feature:________________________________
 
-Estimate of time needed to complete: _____
+Number and name of feature: 
 
-Start time: _____
+Estimate of time needed to complete: 1hour
 
-Finish time: _____
+Start time: 11am
 
-Actual time needed to complete: _____
+Finish time: 1:30 pm 
+
+Actual time needed to complete: 
+
